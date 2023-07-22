@@ -1,0 +1,21 @@
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+PlayTennis=pd.read_csv("tennis.csv")
+value=['Outlook','Temprature','Humidity','Wind']
+PlayTennis
+from sklearn.preprocessing import LabelEncoder
+Le = LabelEncoder()
+
+PlayTennis['outlook'] = Le.fit_transform(PlayTennis['outlook'])
+PlayTennis['temp'] = Le.fit_transform(PlayTennis['temp'])
+PlayTennis['humidity'] = Le.fit_transform(PlayTennis['humidity'])
+PlayTennis['windy'] = Le.fit_transform(PlayTennis['windy'])
+PlayTennis['play'] = Le.fit_transform(PlayTennis['play'])
+y = PlayTennis['play']
+X = PlayTennis.drop(['play'],axis=1)
+from sklearn import tree
+clf = tree.DecisionTreeClassifier(criterion = 'entropy')
+clf = clf.fit(X, y)
+tree.plot_tree(clf)
+print(clf.predict([[30,87000,65,900]]))
