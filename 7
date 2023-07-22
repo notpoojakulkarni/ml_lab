@@ -1,21 +1,22 @@
-import numpy as np
 import pandas as pd
-from sklearn import metrics
-PlayTennis=pd.read_csv("tennis.csv")
-value=['Outlook','Temprature','Humidity','Wind']
-PlayTennis
-from sklearn.preprocessing import LabelEncoder
-Le = LabelEncoder()
-
-PlayTennis['outlook'] = Le.fit_transform(PlayTennis['outlook'])
-PlayTennis['temp'] = Le.fit_transform(PlayTennis['temp'])
-PlayTennis['humidity'] = Le.fit_transform(PlayTennis['humidity'])
-PlayTennis['windy'] = Le.fit_transform(PlayTennis['windy'])
-PlayTennis['play'] = Le.fit_transform(PlayTennis['play'])
-y = PlayTennis['play']
-X = PlayTennis.drop(['play'],axis=1)
-from sklearn import tree
-clf = tree.DecisionTreeClassifier(criterion = 'entropy')
-clf = clf.fit(X, y)
-tree.plot_tree(clf)
-print(clf.predict([[30,87000,65,900]]))
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+data = pd.read_csv('tennis.csv')
+data
+le = LabelEncoder()
+X_encoded = X.apply(le.fit_transform)
+X = data.drop('play', axis=1)
+y = data['play']
+X = pd.get_dummies(X)
+x
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+plt.figure(figsize=(15, 10))
+plot_tree(clf, feature_names=X.columns, class_names=clf.classes_, filled=True)
+plt.show()
