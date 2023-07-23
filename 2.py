@@ -62,3 +62,27 @@ plt.xlabel("True Values")
 plt.ylabel("Predictions")
 plt.title("True Values vs. Predictions")
 plt.show()
+
+
+def gradient_descent(X, y, theta, learning_rate, num_iterations):
+    m = len(y)
+    for i in range(num_iterations):
+        predictions = X.dot(theta)
+        error = predictions - y
+        gradient = (1 / m) * X.T.dot(error)
+        theta -= learning_rate * gradient
+    return theta
+
+# Step 3: Train the model on the dataset
+learning_rate = 0.01
+num_iterations = 1000
+theta = np.random.rand(X_train.shape[1])  # Initialize theta with random values
+
+theta = gradient_descent(X_train, y_train, theta, learning_rate, num_iterations)
+
+# Step 4: Predict the prices for new data
+def predict(X, theta):
+    return X.dot(theta)
+
+# Predicting on the test set
+y_pred = predict(X_test, theta)
