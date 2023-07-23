@@ -5,22 +5,22 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 # For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
 import seaborn as sns
 import matplotlib.pyplot as plt
-df = pd.read_csv("/kaggle/input/iris-dataset/iris.csv")
+df = pd.read_csv("IRIS.csv")
 df.head(5)
-df['species'].value_counts()
+df['Species'].value_counts()
 df.isnull().sum()
 
-sns.pairplot(df, hue="species", size=3)
+sns.pairplot(df, hue="Species", size=3)
 plt.show()
 df.corr()
-#cov??
+df.cov()
 from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
-df['species'] = le.fit_transform(df['species'])
+df['Species'] = le.fit_transform(df['Species'])
 df.head(100)
 from sklearn.model_selection import train_test_split
-X = df.drop(columns = ['species'])
-Y = df['species']
+X = df.drop(columns = ['Species'])
+Y = df['Species']
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.25)
 from sklearn.linear_model import LogisticRegression
 model = LogisticRegression()

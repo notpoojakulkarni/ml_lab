@@ -35,7 +35,7 @@ print(correlation_matrix)
 data=data.dropna(subset=["total_bedrooms"])
 dummies=pd.get_dummies(data.ocean_proximity)
 data=pd.concat([data,dummies],axis="columns")
-data=data.drop(['ocean_proximity','ISLAND'],axis="columns")
+data=data.drop(['ocean_proximity'],axis="columns")
 
 # Step 7: Train and test the regression model
 X = data.drop('median_house_value', axis=1)
