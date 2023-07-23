@@ -27,3 +27,22 @@ model = LogisticRegression()
 
 model.fit(X_train, Y_train)
 print("Accuracy: ", model.score(X_test, Y_test) * 100)
+plt.figure(figsize=(8, 6))
+accuracy = model.score(X_test, Y_test) * 100
+plt.bar(['Logistic Regression'], [accuracy])
+plt.ylim(0, 100)
+plt.ylabel('Accuracy')
+plt.title('Accuracy of Logistic Regression Model')
+plt.show()
+
+# Make predictions on the test set
+Y_pred = model.predict(X_test)
+
+# Add some prediction values
+num_predictions = 10
+random_indices = np.random.randint(0, len(Y_test), num_predictions)
+predicted_species = le.inverse_transform(Y_pred[random_indices])
+actual_species = le.inverse_transform(Y_test.values[random_indices])
+print("\nRandom Predictions (Predicted Species vs. Actual Species):\n")
+for i in range(num_predictions):
+    print(f"Prediction {i+1}: {predicted_species[i]} \t Actual: {actual_species[i]}")
