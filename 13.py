@@ -1,52 +1,41 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
+# Input data files are available in the read-only "../input/" directory
+# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
+import seaborn as sns
+import matplotlib.pyplot as plt
+df = pd.read_csv("IRIS.csv")
+df.head(5)
+df['Species'].value_counts()
+df.isnull().sum()
 
-# Step 1: Import the Iris dataset
-iris = load_iris()
-data = pd.DataFrame(data=np.c_[iris['data'], iris['target']], columns=iris['feature_names'] + ['Species'])
-data['Species'] = data['Species'].map({0: 'setosa', 1: 'versicolor', 2: 'virginica'})
-
-# Step 2: Display first 5 rows of the dataset
-print("First 5 rows of the dataset:")
-print(data.head())
-
-# Step 3: Visualize the data in the form of graphs
-plt.figure(figsize=(10, 6))
-for species in data['Species'].unique():
-    species_data = data[data['Species'] == species]
-    plt.scatter(species_data['sepal length (cm)'], species_data['sepal width (cm)'], label=species)
-plt.xlabel("Sepal Length (cm)")
-plt.ylabel("Sepal Width (cm)")
-plt.title("Sepal Length vs. Sepal Width")
-plt.legend()
+sns.pairplot(df, hue="Species", size=3)
 plt.show()
+df.corr()
+df.cov()
 
-# Step 4: Split the data into training and testing sets
-X = data.iloc[:, :-1]
-y = data['Species']
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df['Species'] = le.fit_transform(df['Species'])
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+from sklearn.model_selection import train_test_split
+X = df.drop(columns = ['Species'])
+Y = df['Species']
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.25)
 
-# Step 5: Train and test the KNN model
-k = 3  # Set the number of neighbors for KNN
-knn_classifier = KNeighborsClassifier(n_neighbors=k)
-knn_classifier.fit(X_train, y_train)
+model =KNeighborsClassifier(n_neighbors=3)
 
-# Step 6: Apply the KNN classifier
-y_pred = knn_classifier.predict(X_test)
+model.fit(X_train, Y_train)
 
-# Step 7: Classify the species by providing the test data
-test_data = np.array([[5.1, 3.5, 1.4, 0.2],   # Sample test data (features for one instance)
-                      [6.3, 2.9, 5.6, 1.8],
-                      [7.2, 3.2, 6.0, 1.8]])
 
-predicted_species = knn_classifier.predict(test_data)
+# Make predictions on the test set
+Y_pred = model.predict(X_test)
 
-print("Predicted Species for Test Data:")
-for i in range(len(test_data)):
-    print(f"Test instance {i + 1}: {predicted_species[i]}")
+num_predictions = 10
+random_indices = np.random.randint(0, len(Y_test), num_predictions)
+predicted_species = le.inverse_transform(Y_pred[random_indices])
+actual_species = le.inverse_transform(Y_test.values[random_indices])
+print("\nRandom Predictions (Predicted Species vs. Actual Species):\n")
+for i in range(num_predictions):
+    print(f"Prediction {i+1}: {predicted_species[i]} \t Actual: {actual_species[i]}")
